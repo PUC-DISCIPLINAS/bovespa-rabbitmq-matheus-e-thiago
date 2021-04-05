@@ -7,7 +7,7 @@ import { FormEvent } from "react";
 const Sell: React.FC = () => {
   const send = (e: FormEvent) => {
     e.preventDefault();
-    alert("Comprou!");
+    alert("Vendeu!");
   };
 
   return (

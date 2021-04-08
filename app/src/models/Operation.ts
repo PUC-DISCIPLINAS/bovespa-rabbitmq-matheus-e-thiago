@@ -15,7 +15,12 @@ export abstract class Operation {
         return this._value * this._quant;
     }
 
-    public abstract excute;
+    public getType = ():string => {
+        return this._type;
+    }
+
+    public abstract execute;
+
 
 }
 

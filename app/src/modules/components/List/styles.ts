@@ -47,7 +47,7 @@ export const OperationTable = styled.table`
       background-color: ${theme.colors.class};
     }
     :hover {
-      background-color: ${theme.colors.number};
+      background-color: ${theme.colors.string};
     }
   }
 

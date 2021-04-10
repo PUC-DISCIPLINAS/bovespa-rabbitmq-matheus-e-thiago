@@ -25,7 +25,7 @@ const List: React.FC = () => {
               <td>{op.getType()}</td>
               <td>{op.getValue()}</td>
               <td>{op.getQnt()}</td>
-              <td>{op.getBroker().getName()}</td>
+              <td>{op.getBroker()}</td>
             </tr>
           ))}
         </tbody>

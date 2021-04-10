@@ -4,6 +4,7 @@ import Input from "../../components/input";
 import Button from "../../components/Button";
 import { Controller } from "../../../controller/Controller";
 import { useRouter } from "next/router";
+import { Types } from "../../../models/Types";
 
 const Sell: React.FC = () => {
   const router = useRouter();
@@ -13,7 +14,7 @@ const Sell: React.FC = () => {
     const value = e.currentTarget.val.value;
     const qnt = e.currentTarget.qnt.value;
     const name = e.currentTarget.broker.value;
-    controller.add("Sell", value, qnt, name);
+    controller.add(Types.sell, value, qnt, name);
     router.push("/");
   };
 

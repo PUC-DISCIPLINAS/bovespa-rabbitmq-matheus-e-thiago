@@ -14,6 +14,7 @@ const Input: React.FC<Content> = ({ name, placeholder, type, step = "1" }) => {
       min="0"
       name={name}
       placeholder={placeholder}
+      required
     />
   );
 };

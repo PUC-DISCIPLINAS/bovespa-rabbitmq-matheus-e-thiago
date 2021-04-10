@@ -3,11 +3,15 @@ import Link from "next/link";
 import Input from "../../components/input";
 import Button from "../../components/Button";
 import { FormEvent } from "react";
+import { useRouter } from "next/router";
 
 const Buy: React.FC = () => {
+  const router = useRouter();
+
   const send = (e: FormEvent) => {
     e.preventDefault();
     alert("Comprou!");
+    router.push("/");
   };
 
   return (

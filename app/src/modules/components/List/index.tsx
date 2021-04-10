@@ -22,14 +22,10 @@ const List: React.FC = () => {
         <tbody>
           {opData.map((op: Operation, index) => (
             <tr key={index}>
-              <th>{op.getType()}</th>
-              <th>{op.getValue()}</th>
-              <th>{op.getQnt()}</th>
-              <th>{op.getBroker().getName()}</th>
-              {/* <th>{op.getType()}</th>
-               <th>{op.getValue()}</th>
-               <th>{op.getQnt()}</th>
-               <th>{op.getBroker().getName()}</th> */}
+              <td>{op.getType()}</td>
+              <td>{op.getValue()}</td>
+              <td>{op.getQnt()}</td>
+              <td>{op.getBroker().getName()}</td>
             </tr>
           ))}
         </tbody>

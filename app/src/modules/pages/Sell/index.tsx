@@ -2,11 +2,11 @@ import * as styles from "./styles";
 import Link from "next/link";
 import Input from "../../components/input";
 import Button from "../../components/Button";
-import { FormEvent } from "react";
 import { Controller } from "../../../controller/Controller";
-import { Operation } from "../../../models/Operation";
+import { useRouter } from "next/router";
 
 const Sell: React.FC = () => {
+  const router = useRouter();
   const controller = new Controller();
   const send = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -14,6 +14,7 @@ const Sell: React.FC = () => {
     const qnt = e.currentTarget.qnt.value;
     const name = e.currentTarget.broker.value;
     controller.add("Sell", value, qnt, name);
+    router.push("/");
   };
 
   return (

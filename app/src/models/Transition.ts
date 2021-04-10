@@ -15,6 +15,19 @@ export class Transition {
         return this._quant;
     }
 
+    public getBroker = ():string[4] => {
+        return this._broker1;
+    }
+
+    public getDate = ():Date => {
+        return this._date;
+    }
+
+    public getValue = ():number => {
+        return this._value;
+    }
+
+
     public realizeTransition = (buyOperation:Operation2, sellOperation:Operation2):string => {
         let quant
         if(sellOperation.execute(buyOperation.getBroker(),buyOperation.getValue())){

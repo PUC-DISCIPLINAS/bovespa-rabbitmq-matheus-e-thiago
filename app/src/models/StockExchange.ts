@@ -37,7 +37,7 @@ export class StockExchange {
         return this._sellList
     }
 
-    public tryTransition = (operation:Operation2):Transition => {
+    public tryTransition = (operation:Operation2) => {
         let transition = new Transition()
         if(operation.getType() === "BUY") {
             this._sellList.forEach((op) => {
@@ -49,16 +49,18 @@ export class StockExchange {
                         operation.setQuant(parseInt(messageArray[1]))
                         this.addBuy(operation)
                         this.publishToTopicOperation(operation);
+                        this.publishTransition(transition);
                         return true;
                     } else if (messageArray[0] === "SELL") {
                         this.removeSell(op);
                         op.setQuant(parseInt(messageArray[1]))
                         this.addSell(op);
                         this.publishToTopicOperation(op);
+                        this.publishTransition(transition);
                         return true;
                     } else {
                         this.removeSell(op);
-                        this.publishToTopicOperation(op)
+                        this.publishTransition(transition);
                         return true;
                     }
                 }
@@ -73,22 +75,24 @@ export class StockExchange {
                         op.setQuant(parseInt(messageArray[1]));
                         this.addBuy(op);
                         this.publishToTopicOperation(op);
+                        this.publishTransition(transition);
                         return true;
                     } else if (messageArray[0] === "SELL") {
                         this.removeBuy(op);
                         operation.setQuant(parseInt(messageArray[1]));
                         this.addSell(operation)
                         this.publishToTopicOperation(operation);
+                        this.publishTransition(transition);
                         return true;
                     } else {
                         this.removeSell(op);
+                        this.publishTransition(transition);
                         return true;
                     }
                 }
 
             })
         }
-        return transition.getQuant() ? transition : null;
     }
 
  
@@ -110,7 +114,6 @@ export class StockExchange {
                   durable: false
                 });
                 channel.publish(exchange, key, Buffer.from(msg));
-                console.log(" [x] Sent %s:'%s'", key, msg);
 
               });
             
@@ -119,10 +122,36 @@ export class StockExchange {
                 process.exit(0)
               }, 500);
             }); 
+
     }
 
-    
+    private publishTransition = (transition: Transition) => {
+        amqp.connect('amqp://localhost', function(error0, connection) {
+            if(error0) {
+                throw error0;
+            }
+            connection.createChannel(function(error1, channel) {
+                if (error1) {
+                  throw error1;
+                }
+                let exchange = 'topic_logs';
+                let key = `TRANSITION.${transition.getBroker()}`;
+                let msg = `${transition.getDate()},${transition.getBroker()},${transition.getBroker()},${transition.getQuant()},${transition.getValue()},`;
+            
+                channel.assertExchange(exchange, 'topic', {
+                  durable: false
+                });
+                channel.publish(exchange, key, Buffer.from(msg));
 
+              });
+            
+              setTimeout(function() {
+                connection.close();
+                process.exit(0)
+              }, 500);
+            }); 
+
+        }
 
 
 }

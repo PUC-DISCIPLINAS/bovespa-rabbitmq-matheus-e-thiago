@@ -3,13 +3,14 @@ interface Content {
   name: string;
   placeholder: string;
   type: string;
+  step?: string | undefined;
 }
 
-const Input: React.FC<Content> = ({ name, placeholder, type }) => {
+const Input: React.FC<Content> = ({ name, placeholder, type, step = "1" }) => {
   return (
     <styles.InputStyle
       type={type}
-      step="0.01"
+      step={step}
       min="0"
       name={name}
       placeholder={placeholder}

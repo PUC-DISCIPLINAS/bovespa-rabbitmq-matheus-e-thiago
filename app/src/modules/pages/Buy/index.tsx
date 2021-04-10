@@ -18,10 +18,10 @@ const Buy: React.FC = () => {
           <Input type="number" name="valor" placeholder="valor unidade" />
           <Input type="number" name="quantidade" placeholder="quantidade" />
           <Input type="text" name="corretora" placeholder="corretora" />
-          <Button text="enviar" />
+          <Button text="Enviar" />
           <Link href="/">
             <a>
-              <Button text="retornar" />
+              <Button text="Retornar" />
             </a>
           </Link>
         </styles.FormContainer>

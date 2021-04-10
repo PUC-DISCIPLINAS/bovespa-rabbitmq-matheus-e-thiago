@@ -1,9 +1,11 @@
 import styled from "styled-components";
+import theme from "../../../share/styles/themes";
 
 export const ButtonStyle = styled.button`
-  background-color: #fff;
-  border: solid 3px black;
-  color: black;
+  background-color: ${theme.colors.var};
+  border: solid 3px ${theme.colors.background};
+  color: ${theme.colors.background};
+  font-weight: 700;
   font-size: 22px;
   border-radius: 30px;
   width: 200px;
@@ -12,8 +14,7 @@ export const ButtonStyle = styled.button`
 
   &:hover {
     cursor: pointer;
-    background-color: black;
-    color: #fff;
+    background-color: ${theme.colors.class};
   }
 
   &:focus {

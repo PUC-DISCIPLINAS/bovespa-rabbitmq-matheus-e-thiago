@@ -1,9 +1,10 @@
 import styled from "styled-components";
+import theme from "../../../share/styles/themes";
 
 export const Container = styled.div`
   width: 100vw;
   height: 100vh;
-  background-color: #ddd;
+  background-color: ${theme.colors.background};
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -11,7 +12,7 @@ export const Container = styled.div`
 `;
 
 export const FormContainer = styled.div`
-  background-color: #fff;
+  background-color: ${theme.colors.comment};
   width: 600px;
   height: 600px;
   display: flex;
@@ -21,4 +22,7 @@ export const FormContainer = styled.div`
   flex-wrap: wrap;
   gap: 50px;
   border-radius: 50px;
+  h1 {
+    color: ${theme.colors.background};
+  }
 `;

@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import theme from "./themes";
 
 export default createGlobalStyle`
 * {
@@ -16,5 +17,6 @@ export default createGlobalStyle`
   }
   body {
     font: 400 18px Roboto, sans-serif;
+    background-color: ${theme.colors.background}
   }
   `;

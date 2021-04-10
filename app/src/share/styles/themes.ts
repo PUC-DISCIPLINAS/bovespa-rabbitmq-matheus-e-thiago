@@ -1,6 +1,12 @@
 const theme = {
   colors: {
-    background: "#DDD",
+    background: "#302c34",
+    comment: "#d9d9d9",
+    string: "#f1fa8c",
+    var: "#ff79c6",
+    class: "#bd93f9",
+    function: "#50fa7b",
+    number: "#8be9fd",
   },
   breakpoint: {
     xs: 0,

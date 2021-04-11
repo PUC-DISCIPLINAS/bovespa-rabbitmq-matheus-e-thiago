@@ -3,20 +3,54 @@ export abstract class Operation {
   private _type: Types;
   private _value: number;
   private _quant: number;
-  private _broker: string;
+  protected _broker: string;
+  protected _owner: string;
   private _date: Date;
   private _active: boolean = true;
 
-  constructor(type: Types, value: number, quant: number, broker: string) {
+  constructor(
+    type: Types,
+    value: number,
+    quant: number,
+    broker: string,
+    owner: string
+  ) {
     this._type = type;
     this._value = value;
     this._quant = quant;
     this._broker = broker;
+    this._owner = owner;
     this._date = new Date();
     if (quant <= 0) {
       this._active = false;
     }
   }
+
+  public sell = (op: Operation) => {
+    const qntSold = op._quant;
+    op.buy(qntSold);
+    this._date = new Date();
+    this._quant = this._quant - qntSold;
+    if (this._quant <= 0) {
+      this._active = false;
+    }
+  };
+
+  private buy = (qnt: number) => {
+    this._quant = this._quant - qnt;
+    this._date = new Date();
+    if (this._quant <= 0) {
+      this._active = false;
+    }
+  };
+
+  public addMore = (qnt: number) => {
+    this._quant = +this._quant + +qnt;
+    this._date = new Date();
+    if (this._quant > 0) {
+      this._active = true;
+    }
+  };
 
   public getTotalValue = (): number => {
     return this._value * this._quant;
@@ -50,73 +84,29 @@ export abstract class Operation {
     this._active = active;
   };
 
-  public sell = (op: Operation) => {
-    const value = op.getValue();
-    const qntSold = op._quant;
-    op.buy(qntSold);
-    this._date = new Date();
-    this._quant = this._quant - qntSold;
-    if (this._quant <= 0) {
-      this._active = false;
-    }
+  public getOwner = (): string => {
+    return this._owner;
   };
-
-  private buy = (qnt: number) => {
-    this._quant = this._quant - qnt;
-    this._date = new Date();
-    if (this._quant <= 0) {
-      this._active = false;
-    }
-  };
-
-  public addMore = (qnt: number) => {
-    this._quant = +this._quant + +qnt;
-    this._date = new Date();
-    if (this._quant > 0) {
-      this._active = true;
-    }
-  };
-
-  public abstract execute(list: Operation[]): Operation;
 }
 
 export class Sell extends Operation {
-  public execute = (list: Operation[]): Operation => {
-    return this;
-  };
+  constructor(value: number, quant: number, broker: string, owner: string) {
+    super(Types.sell, value, quant, broker, owner);
+  }
 }
 
 export class Buy extends Operation {
-  public execute = (list: Operation[]): Operation => {
-    return this;
-  };
+  constructor(value: number, quant: number, broker: string, owner: string) {
+    super(Types.buy, value, quant, broker, owner);
+  }
 }
 
-// export class Broker {
-//   private _quant: number;
-//   private _name: string;
-//   private _value: number;
+export class Transfer extends Operation {
+  constructor(value: number, quant: number, broker: string, owner: string) {
+    super(Types.transfer, value, quant, broker, owner);
+  }
 
-//   constructor(value: number, quant: number, name: string) {
-//     this._value = value;
-//     this._quant = quant;
-//     this._name = name;
-//   }
-
-//   public getTotalValue = (): number => {
-//     return this._value * this._quant;
-//   };
-
-//   public buy = (quant: number, value: number): boolean => {
-//     if (quant <= this._quant && this.getTotalValue() <= value) {
-//       this._quant -= quant;
-//       return true;
-//     } else return false;
-//   };
-
-//   public transition = () => {};
-
-//   public getName = (): string => {
-//     return this._name;
-//   };
-// }
+  public getBroker = (): string => {
+    return this._broker + " -> " + this._owner;
+  };
+}

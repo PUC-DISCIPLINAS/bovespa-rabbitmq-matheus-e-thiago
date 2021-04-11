@@ -6,15 +6,13 @@ const List: React.FC = () => {
   const controller = new Controller();
   const opData: Operation[] = controller.get();
 
-  console.log(opData);
-
   return (
     <styles.Container>
       <styles.OperationTable>
         <thead>
           <tr>
-            <th>Corretora</th>
-            <th>Tipo</th>
+            <th>Interesse</th>
+            <th>Ação</th>
             <th>Valor</th>
             <th>Quantidade</th>
             <th>Última atualização</th>
@@ -24,8 +22,8 @@ const List: React.FC = () => {
         <tbody>
           {opData.map((op: Operation, index) => (
             <tr key={index} className={op.isActive() ? "enabled" : "desabled"}>
-              <td>{op.getBroker()}</td>
-              <td>{op.getType()}</td>
+              <td>{op.getOwner()}</td>
+              <td>{op.getType() + ": " + op.getBroker()}</td>
               <td>{op.getValue()}</td>
               <td>{op.getQnt()}</td>
               <td>

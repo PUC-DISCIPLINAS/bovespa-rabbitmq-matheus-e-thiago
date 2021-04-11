@@ -20,7 +20,7 @@ export const FormContainer = styled.div`
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  gap: 50px;
+  gap: 40px;
   border-radius: 50px;
   h1 {
     color: ${theme.colors.background};

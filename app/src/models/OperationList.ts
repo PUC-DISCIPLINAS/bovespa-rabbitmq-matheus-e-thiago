@@ -1,10 +1,9 @@
-import { types } from "node:util";
-import { Operation } from "./Operation";
+import { Operation, Transfer } from "./Operation";
 import { Types } from "./Types";
 export class OperationList {
   private static _operations: Operation[] = [];
 
-  static add(op: Operation): void {
+  static add(op: Operation, buyer?: string): void {
     switch (op.getType()) {
       case Types.sell:
         this.confirmIfSell(op);
@@ -25,6 +24,8 @@ export class OperationList {
     return ([] as Operation[]).concat(this._operations);
   }
 
+  //quando insere uma operação de venda, ele pecorre todos e vê se aquela operação já estava
+  //sendo vendida, para aumentar a quantidade
   static update(op: Operation): boolean {
     for (let o of this._operations) {
       if (
@@ -33,6 +34,9 @@ export class OperationList {
         o.getValue() === op.getValue()
       ) {
         o.addMore(op.getQnt());
+        this.add(
+          new Transfer(op.getValue(), op.getQnt(), op.getOwner(), o.getOwner())
+        );
         this.sort();
         return true;
       }
@@ -40,6 +44,7 @@ export class OperationList {
     return false;
   }
 
+  //Quando insere uma operação de compra, ele pecorre todos e ve se alguem queria vender
   static confirmIfBuy(op: Operation): boolean {
     const list: Operation[] = this._operations.filter(
       (o) => o.getType() === Types.sell
@@ -48,15 +53,19 @@ export class OperationList {
       if (
         o.getBroker() === op.getBroker() &&
         o.getValue() === op.getValue() &&
-        o.getQnt() >= op.getQnt()
+        +o.getQnt() >= +op.getQnt()
       ) {
+        const qnt = op.getQnt();
         o.sell(op);
+        //cria a transação
+        this.add(new Transfer(op.getValue(), qnt, op.getOwner(), o.getOwner()));
         return true;
       }
     }
     return false;
   }
 
+  //Quando insere uma operação de venda, ele pecorre todas e vê se tinha alguém querendo comprar
   static confirmIfSell(op: Operation): boolean {
     const list: Operation[] = this._operations.filter(
       (o) => o.getType() === Types.buy
@@ -65,9 +74,12 @@ export class OperationList {
       if (
         o.getBroker() === op.getBroker() &&
         o.getValue() === op.getValue() &&
-        o.getQnt() <= op.getQnt()
+        +o.getQnt() <= +op.getQnt()
       ) {
+        const qnt = o.getQnt();
         op.sell(o);
+        //cria a transação
+        this.add(new Transfer(o.getValue(), qnt, o.getOwner(), op.getOwner()));
         return true;
       }
     }

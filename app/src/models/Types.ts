@@ -1,5 +1,5 @@
 export enum Types {
-  sell = "Sell",
-  buy = "Buy",
-  transfer = "Transfer",
+  sell = "Vender",
+  buy = "Comprar",
+  transfer = "Transferir",
 }

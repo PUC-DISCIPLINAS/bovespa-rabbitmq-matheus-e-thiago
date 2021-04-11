@@ -14,7 +14,7 @@ const Sell: React.FC = () => {
     const value = e.currentTarget.val.value;
     const qnt = e.currentTarget.qnt.value;
     const name = e.currentTarget.broker.value;
-    controller.add(Types.sell, value, qnt, name);
+    controller.add(Types.sell, value, qnt, name, name);
     router.push("/");
   };
 
@@ -23,14 +23,14 @@ const Sell: React.FC = () => {
       <form onSubmit={(e) => send(e)}>
         <styles.FormContainer>
           <h1>Vender</h1>
+          <Input type="text" name="broker" placeholder="Corretora" />
           <Input
             type="number"
             step="0.01"
             name="val"
-            placeholder="valor unidade"
+            placeholder="Valor da unidade"
           />
-          <Input type="number" name="qnt" placeholder="quantidade" />
-          <Input type="text" name="broker" placeholder="corretora" />
+          <Input type="number" name="qnt" placeholder="Quantidade" />
           <Button text="enviar" />
           <Link href="/">
             <a>

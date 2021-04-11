@@ -15,6 +15,8 @@ export class Controller {
         break;
       case Types.buy:
         op = new Buy(type, value, qnt, name);
+      case Types.transfer:
+
       default:
         OperationList.add(op);
     }

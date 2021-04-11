@@ -13,6 +13,7 @@ export const Container = styled.div`
 export const OperationTable = styled.table`
   width: 90%;
   height: 90%;
+  margin-bottom: 50px;
   background-color: ${theme.colors.comment};
   caption-side: top;
   border: none;
@@ -47,7 +48,23 @@ export const OperationTable = styled.table`
       background-color: ${theme.colors.class};
     }
     :hover {
+      cursor: pointer;
       background-color: ${theme.colors.string};
+    }
+  }
+
+  .desabled {
+    color: ${theme.colors.comment};
+    :nth-of-type(odd) {
+      background-color: ${theme.colors.backgroundLight};
+    }
+    :nth-of-type(even) {
+      background-color: ${theme.colors.backgroundLight};
+    }
+
+    :hover {
+      cursor: default;
+      background-color: ${theme.colors.backgroundLight};
     }
   }
 

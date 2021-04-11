@@ -13,19 +13,27 @@ const List: React.FC = () => {
       <styles.OperationTable>
         <thead>
           <tr>
+            <th>Corretora</th>
             <th>Tipo</th>
             <th>Valor</th>
             <th>Quantidade</th>
-            <th>Corretora</th>
+            <th>Última atualização</th>
+            <th>Ativo</th>
           </tr>
         </thead>
         <tbody>
           {opData.map((op: Operation, index) => (
-            <tr key={index}>
+            <tr key={index} className={op.isActive() ? "enabled" : "desabled"}>
+              <td>{op.getBroker()}</td>
               <td>{op.getType()}</td>
               <td>{op.getValue()}</td>
               <td>{op.getQnt()}</td>
-              <td>{op.getBroker()}</td>
+              <td>
+                {op.getDate().toLocaleDateString() +
+                  " | " +
+                  op.getDate().toLocaleTimeString()}
+              </td>
+              <td>{op.isActive() ? "Sim" : "Não"}</td>
             </tr>
           ))}
         </tbody>

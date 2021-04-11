@@ -1,6 +1,7 @@
 const theme = {
   colors: {
     background: "#302c34",
+    backgroundLight: "#524E56",
     comment: "#d9d9d9",
     string: "#f1fa8c",
     var: "#ff79c6",

@@ -1,8 +1,11 @@
 import { OperationList } from "../models/OperationList";
 import { Operation, Sell, Buy, Transfer } from "../models/Operation";
 import { Types } from "../models/Types";
+
 export class Controller {
-  constructor() {}
+
+  constructor() {
+  }
 
   add(
     type: Types,
@@ -24,6 +27,7 @@ export class Controller {
         OperationList.add(op);
         break;
     }
+    
   }
 
   get(): Operation[] {

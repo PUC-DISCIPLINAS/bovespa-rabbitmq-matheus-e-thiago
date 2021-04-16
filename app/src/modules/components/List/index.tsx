@@ -1,10 +1,15 @@
 import * as styles from "./styles";
+import { useState } from "react";
 import { Controller } from "../../../controller/Controller";
 import { Operation } from "../../../models/Operation";
 
+
 const List: React.FC = () => {
   const controller = new Controller();
-  const opData: Operation[] = controller.get();
+  const opData: Operation[] = controller.get();  
+
+  const [data, setData] = useState(opData);
+  
 
   return (
     <styles.Container>

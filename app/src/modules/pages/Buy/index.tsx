@@ -5,8 +5,9 @@ import Button from "../../components/Button";
 import { useRouter } from "next/router";
 import { Controller } from "../../../controller/Controller";
 import { Types } from "../../../models/Types";
-
+ 
 const Buy: React.FC = () => {
+
   const router = useRouter();
   const controller = new Controller();
 

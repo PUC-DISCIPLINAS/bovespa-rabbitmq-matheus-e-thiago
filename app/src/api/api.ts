@@ -14,6 +14,22 @@ export const api = axios.create({
   baseURL: "http://localhost:8002/",
 });
 
+export const bind = async (): Promise<number> => {
+  try {
+    return await (await api.post("/bind")).data;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const getMessages = async (id: string): Promise<string> => {
+  try {
+    return await (await api.post("/messages", { id })).data;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
 export const sendOperation = async (
   operation: Operation
 ): Promise<Operation> => {

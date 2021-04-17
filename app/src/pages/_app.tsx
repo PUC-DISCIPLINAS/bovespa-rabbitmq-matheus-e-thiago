@@ -1,10 +1,20 @@
 import { AppProps } from "next/app";
 import { ThemeProvider } from "styled-components";
+import { bind, getMessages } from "../api/api";
+import { OperationList } from "../models/OperationList";
 
 import GlobalStyle from "../share/styles/global";
 import theme from "../share/styles/themes";
 
 const AppMQ: React.FC<AppProps> = ({ Component, pageProps }) => {
+  const startServer = async () => {
+    if (!localStorage.getItem("$$id")) {
+      const response = await bind();
+      localStorage.setItem("$$id", response.toString());
+    }
+    await OperationList.initialize(localStorage.getItem("$$id"));
+  };
+  startServer();
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />

@@ -1,6 +1,6 @@
-import { Operation, Sell, Transfer } from "./Operation";
+import { Operation, Transfer } from "./Operation";
 import { Types } from "./Types";
-import { sendOperation } from "../api/api";
+import { sendOperation, getMessages } from "../api/api";
 
 export class OperationList {
   private static _operations: Operation[] = [];
@@ -85,5 +85,11 @@ export class OperationList {
       }
     }
     return false;
+  }
+
+  public static async initialize(id: string) {
+    console.log("ENTROU COM + ", id);
+    const messages = await getMessages(id);
+    console.log("Mensagens = " + messages);
   }
 }

@@ -4,7 +4,6 @@ import { RabbitMQTopicServer } from "./src/RabbitMQTopicServer";
 import { Channel, Connection, connect } from "amqplib";
 import { Request, Response } from "express";
 import cors from "cors";
-
 interface Operation {
   broker: string;
   date: Date;
@@ -14,6 +13,17 @@ interface Operation {
   owner: string;
 }
 
+interface Id {
+  id: number;
+}
+
+interface Connections {
+  topic: RabbitMQTopicServer;
+  messages: string[];
+}
+
+const topics: Connections[] = [];
+let id: number = 1;
 const app = express();
 const PORT = 8002;
 app.use(cors());
@@ -28,7 +38,6 @@ app.get("/ping", function (req, res) {
 
 //send operation to broker server
 app.post("/send", async (req: Request<Operation>, res: Response) => {
-  console.log("BODY: ", req.body);
   const connection = await connect(
     "amqps://pozawbsw:dEHTHRVWhV_JJ1_OoIH_7yqL7jQ_jDc0@jackal.rmq.cloudamqp.com/pozawbsw"
   );
@@ -47,6 +56,36 @@ app.post("/send", async (req: Request<Operation>, res: Response) => {
   res.json(op);
 });
 
+app.post(`/bind`, async (req: Request, res: Response) => {
+  const connection = await connect(
+    "amqps://pozawbsw:dEHTHRVWhV_JJ1_OoIH_7yqL7jQ_jDc0@jackal.rmq.cloudamqp.com/pozawbsw"
+  );
+  const channel = await connection.createChannel();
+  const topicId = id;
+  id++;
+  topics[topicId] = {
+    topic: new RabbitMQTopicServer(),
+    messages: [],
+  };
+  topics[topicId].topic.start(channel);
+
+  topics[topicId].topic.bindToQueue("GALO");
+  topics[topicId].topic.consume((message) => {
+    console.log(topicId + " recebeu " + message.content.toString());
+    topics[topicId].messages.push(message);
+  }, channel);
+
+  return res.json(topicId);
+});
+
+app.post("/messages", (req: Request<Id>, res: Response) => {
+  const idBody: Id = req.body;
+  const index = idBody.id;
+  if (topics[index]) {
+    return res.json(topics[index].messages);
+  } else return res.status(404);
+});
+
 app.listen(PORT, async () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
   const connection = await connect(
@@ -54,19 +93,12 @@ app.listen(PORT, async () => {
   );
   const channel = await connection.createChannel();
   const topicServer = new RabbitMQTopicServer();
-  // await server1.start(channel);
-  // await server1.publishInQueue("servidor1",channel)
-  // await server1.consume((message) => {
-  //   console.log(message.content.toString())
-  // },channel)
 
   await topicServer.start(channel);
   await topicServer.bindToQueue("GALO");
-  // await server.bindToQueue("AMBE1");
   await topicServer.consume((message) => {
     console.log(`recebi: ${message.content.toString()}`);
   }, channel);
+
   await topicServer.publishExchange("hello world", "compra.GALO", channel);
-  // await server.publishExchange("hello world2", "venda.AMBE1",channel);
-  // await server.publishExchange("hello world3", "transferencia.AMBE5",channel);
 });

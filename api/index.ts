@@ -71,18 +71,16 @@ app.post(`/bind`, async (req: Request, res: Response) => {
 
   topics[topicId].topic.bindToQueue("GALO");
   topics[topicId].topic.consume((message) => {
-    console.log(topicId + " recebeu " + message.content.toString());
-    topics[topicId].messages.push(message);
+    const messageString = message.content.toString();
+    topics[topicId].messages.push(messageString);
   }, channel);
 
   return res.json(topicId);
 });
 
-app.post("/messages", (req: Request<Id>, res: Response) => {
-  const idBody: Id = req.body;
-  const index = idBody.id;
-  if (topics[index]) {
-    return res.json(topics[index].messages);
+app.get("/messages/:id", (req: Request, res: Response) => {
+  if (topics[1]) {
+    return res.json(topics[1].messages);
   } else return res.status(404);
 });
 

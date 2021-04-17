@@ -22,9 +22,9 @@ export const bind = async (): Promise<number> => {
   }
 };
 
-export const getMessages = async (id: string): Promise<string> => {
+export const getMessages = async (id: string): Promise<string[]> => {
   try {
-    return await (await api.post("/messages", { id })).data;
+    return await (await api.get("/messages/" + id)).data;
   } catch (e) {
     console.error(e);
   }

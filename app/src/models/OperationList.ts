@@ -4,10 +4,10 @@ import { RabbitMQServer } from "./RabbitMQServer";
 
 export class OperationList {
   private static _operations: Operation[] = [];
-  private static _rabbitmqServer: RabbitMQServer = new RabbitMQServer('amqps://kahlzmrv:OASXWAFgUNArCgwzkd0hoPvoE-If0xdu@jackal.rmq.cloudamqp.com/kahlzmrv');
+  //private static _rabbitmqServer: RabbitMQServer = new RabbitMQServer('amqps://kahlzmrv:OASXWAFgUNArCgwzkd0hoPvoE-If0xdu@jackal.rmq.cloudamqp.com/kahlzmrv');
 
   static async add(op: Operation, buyer?: string) {
-    this._rabbitmqServer.start()
+    //this._rabbitmqServer.start()
     switch (op.getType()) {
       case Types.sell:
         this.confirmIfSell(op);

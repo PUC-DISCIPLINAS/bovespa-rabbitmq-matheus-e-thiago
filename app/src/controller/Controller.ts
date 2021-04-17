@@ -15,13 +15,13 @@ export class Controller {
     switch (type) {
       case Types.sell:
         op = new Sell(value, qnt, name, owner);
-        if (!OperationList.update(op)) {
-          OperationList.add(op);
-        }
+        OperationList.add(op);
+
         break;
       case Types.buy:
         op = new Buy(value, qnt, name, owner);
         OperationList.add(op);
+
         break;
     }
   }

@@ -34,7 +34,6 @@ app.post("/send", async (req: Request<Operation>, res: Response) => {
   );
   const channel = await connection.createChannel();
   const op: Operation = req.body;
-  console.log("Got body:", op);
   const brokerServer = new RabbitMQBroker();
   await brokerServer.start(channel);
   await brokerServer.publishInQueue(JSON.stringify(op), channel);
@@ -45,7 +44,6 @@ app.post("/send", async (req: Request<Operation>, res: Response) => {
     op.type + "." + op.broker,
     channel
   );
-
   res.json(op);
 });
 

@@ -1,4 +1,4 @@
-import { Operation, Transfer } from "./Operation";
+import { Operation, Sell, Transfer } from "./Operation";
 import { Types } from "./Types";
 import { sendOperation } from "../api/api";
 
@@ -6,8 +6,10 @@ export class OperationList {
   private static _operations: Operation[] = [];
   //private static _rabbitmqServer: RabbitMQServer = new RabbitMQServer('amqps://kahlzmrv:OASXWAFgUNArCgwzkd0hoPvoE-If0xdu@jackal.rmq.cloudamqp.com/kahlzmrv');
 
-  static async add(op: Operation, buyer?: string) {
+  static async add(op: Operation) {
     //this._rabbitmqServer.start()
+    this._operations.push(op);
+    this.sort();
     switch (op.getType()) {
       case Types.sell:
         await this.confirmIfSell(op);
@@ -17,8 +19,6 @@ export class OperationList {
         break;
     }
     await sendOperation(op);
-    this._operations.push(op);
-    this.sort();
   }
 
   private static sort(): void {
@@ -27,23 +27,6 @@ export class OperationList {
 
   static get(): Operation[] {
     return ([] as Operation[]).concat(this._operations);
-  }
-
-  //quando insere uma operação de venda, ele pecorre todos e vê se aquela operação já estava
-  //sendo vendida, para aumentar a quantidade
-  static update(op: Operation): boolean {
-    for (let o of this._operations) {
-      if (
-        o.getType() === Types.sell &&
-        o.getBroker() === op.getBroker() &&
-        o.getValue() === op.getValue()
-      ) {
-        o.addMore(op.getQnt());
-        this.sort();
-        return true;
-      }
-    }
-    return false;
   }
 
   //Quando insere uma operação de compra, ele pecorre todos e ve se alguem queria vender
@@ -68,6 +51,8 @@ export class OperationList {
         );
         this.add(transfer);
         await sendOperation(transfer);
+        await sendOperation(o);
+        await sendOperation(op);
         return true;
       }
     }

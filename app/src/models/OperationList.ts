@@ -1,6 +1,6 @@
 import { Operation, Transfer } from "./Operation";
 import { Types } from "./Types";
-import { RabbitMQServer } from "./RabbitMQServer";
+import { sendOperation } from "../api/api";
 
 export class OperationList {
   private static _operations: Operation[] = [];
@@ -10,12 +10,13 @@ export class OperationList {
     //this._rabbitmqServer.start()
     switch (op.getType()) {
       case Types.sell:
-        this.confirmIfSell(op);
+        await this.confirmIfSell(op);
         break;
       case Types.buy:
-        this.confirmIfBuy(op);
+        await this.confirmIfBuy(op);
         break;
     }
+    await sendOperation(op);
     this._operations.push(op);
     this.sort();
   }
@@ -38,9 +39,6 @@ export class OperationList {
         o.getValue() === op.getValue()
       ) {
         o.addMore(op.getQnt());
-        this.add(
-          new Transfer(op.getValue(), op.getQnt(), op.getOwner(), o.getOwner())
-        );
         this.sort();
         return true;
       }
@@ -49,7 +47,7 @@ export class OperationList {
   }
 
   //Quando insere uma operação de compra, ele pecorre todos e ve se alguem queria vender
-  static confirmIfBuy(op: Operation): boolean {
+  static async confirmIfBuy(op: Operation): Promise<boolean> {
     const list: Operation[] = this._operations.filter(
       (o) => o.getType() === Types.sell
     );
@@ -62,7 +60,14 @@ export class OperationList {
         const qnt = op.getQnt();
         o.sell(op);
         //cria a transação
-        this.add(new Transfer(op.getValue(), qnt, op.getOwner(), o.getOwner()));
+        const transfer = new Transfer(
+          op.getValue(),
+          qnt,
+          op.getOwner(),
+          o.getOwner()
+        );
+        this.add(transfer);
+        await sendOperation(transfer);
         return true;
       }
     }
@@ -70,7 +75,7 @@ export class OperationList {
   }
 
   //Quando insere uma operação de venda, ele pecorre todas e vê se tinha alguém querendo comprar
-  static confirmIfSell(op: Operation): boolean {
+  static async confirmIfSell(op: Operation): Promise<boolean> {
     const list: Operation[] = this._operations.filter(
       (o) => o.getType() === Types.buy
     );
@@ -81,9 +86,16 @@ export class OperationList {
         +o.getQnt() <= +op.getQnt()
       ) {
         const qnt = o.getQnt();
-        op.sell(o);
         //cria a transação
-        this.add(new Transfer(o.getValue(), qnt, o.getOwner(), op.getOwner()));
+        op.sell(o);
+        const transfer = new Transfer(
+          o.getValue(),
+          qnt,
+          o.getOwner(),
+          op.getOwner()
+        );
+        this.add(transfer);
+        await sendOperation(transfer);
         return true;
       }
     }

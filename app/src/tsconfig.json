@@ -22,7 +22,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "models/RabbitMQServer.js"  ],
+, "models/RabbitMQServer.js", "models/RabbitMQTopicServer.ts"  ],
   "exclude": [
     "node_modules"
   ]

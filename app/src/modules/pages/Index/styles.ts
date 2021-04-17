@@ -3,7 +3,7 @@ import theme from "../../../share/styles/themes";
 
 export const Container = styled.div`
   background-color: ${theme.colors.background};
-  min-height: 100vh;
+  min-height: 70vh;
   min-width: 100vw;
   display: flex;
   flex-direction: column;

@@ -1,10 +1,10 @@
-import { Operation, Transfer } from "./Operation";
+import { Buy, Sell, Operation, Transfer } from "./Operation";
 import { Types } from "./Types";
 import { sendOperation, getMessages } from "../api/api";
-
+import { OperationInterface } from "./OperationInterface";
 export class OperationList {
   private static _operations: Operation[] = [];
-  //private static _rabbitmqServer: RabbitMQServer = new RabbitMQServer('amqps://kahlzmrv:OASXWAFgUNArCgwzkd0hoPvoE-If0xdu@jackal.rmq.cloudamqp.com/kahlzmrv');
+  private static _init = 0;
 
   static async add(op: Operation) {
     //this._rabbitmqServer.start()
@@ -88,8 +88,41 @@ export class OperationList {
   }
 
   public static async initialize(id: string) {
-    console.log("ENTROU COM + ", id);
     const messages = await getMessages(id);
-    console.log("Mensagens = " + messages);
+    const initializeAt = this._init;
+    for (let i = initializeAt; i < messages.length; i++) {
+      try {
+        const msg = messages[i];
+        const operationJSON: OperationInterface = JSON.parse(msg);
+        let operation: Operation;
+        switch (operationJSON.type) {
+          case Types.buy:
+            operation = new Buy(
+              operationJSON.value,
+              operationJSON.qnt,
+              operationJSON.broker,
+              operationJSON.owner
+            );
+            break;
+          case Types.sell:
+            operation = new Sell(
+              operationJSON.value,
+              operationJSON.qnt,
+              operationJSON.broker,
+              operationJSON.owner
+            );
+            break;
+          case Types.transfer:
+            operation = new Transfer(
+              operationJSON.value,
+              operationJSON.qnt,
+              operationJSON.broker,
+              operationJSON.owner
+            );
+        }
+        this._init++;
+        this._operations.push(operation);
+      } catch (error) {}
+    }
   }
 }

@@ -2,12 +2,27 @@ import styled from "styled-components";
 import theme from "../../../share/styles/themes";
 
 export const Container = styled.div`
-  width: 100vw;
-  min-height: 100px;
+  width: 100%;
+  min-height: 100%;
   background-color: ${theme.colors.background};
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+export const ContainerWithButton = styled.div`
+  width: 100vw;
+  min-height: 100px;
+  background-color: ${theme.colors.background};
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 20px;
+
+  div {
+    align-self: center;
+  }
 `;
 
 export const OperationTable = styled.table`

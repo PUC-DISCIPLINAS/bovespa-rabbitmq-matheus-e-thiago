@@ -101,7 +101,7 @@ Caso retorne que a aplicação foi compilada com sucesso, ela será disponibiliz
 
 **4. Sistema desenvolvido**
 
-
+Uma vez que o servidor e em seguida, a interface é inicializada e o usuário acessar o localhost:3000, a aplicação vai procurar no localStorage do usuário, se existe o item **id**, responsável por selecionar a conexão desse usuário, caso ela ainda não tenha sido estabelecida, o sistema redireciona o usuário para uma página de _bind_
 
 **5. Conclusão**
 

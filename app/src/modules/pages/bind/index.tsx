@@ -14,7 +14,11 @@ const Bind: React.FC = () => {
         Actives.forEach((act) => {
             e.currentTarget[act].checked && bindings.push(act)  
         })
-        await bind(bindings);
+      if (!localStorage.getItem("$$id")) {
+        const response = await bind(bindings);
+        localStorage.setItem("$$id", response.toString());
+      }
+        
         router.push("/")
     }
 

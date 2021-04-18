@@ -64,8 +64,9 @@ app.post(`/bind`, async (req: Request<string[]>, res: Response) => {
     messages: [],
   };
   const bindings : string[] = req.body;
-  topics[topicId].topic.start(channel); 
-  topics[topicId].topic.bindToQueue(bindings)
+  topics[topicId].topic.start(channel);
+  if (bindings.length > 0)  
+     topics[topicId].topic.bindToQueue(bindings)
 
   topics[topicId].topic.consume((message) => {
     const messageString = message.content.toString();
@@ -74,14 +75,18 @@ app.post(`/bind`, async (req: Request<string[]>, res: Response) => {
 
     for (let msg of topics[topicId].messages) {
       const oldOperation: Operation = JSON.parse(msg);
+
       if (
         oldOperation.broker === newOperation.broker &&
         oldOperation.value === newOperation.value &&
-        oldOperation.type === newOperation.type
+        oldOperation.type === newOperation.type 
       ) {
+        console.log(oldOperation);
+        console.log(newOperation);
         toRemove.push(msg);
       }
     }
+    console.log(toRemove)
     for (let msg of toRemove) {
       topics[topicId].messages = topics[topicId].messages.filter(
         (m) => msg !== m

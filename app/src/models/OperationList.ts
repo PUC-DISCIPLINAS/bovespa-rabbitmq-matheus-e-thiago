@@ -79,9 +79,12 @@ export class OperationList {
         );
         this.add(transfer);
         await sendOperation(transfer);
+        await sendOperation(o);
+        await sendOperation(op);
         return true;
       }
     }
+    await sendOperation(op);
     return false;
   }
 

@@ -1,18 +1,15 @@
 import { AppProps } from "next/app";
 import { ThemeProvider } from "styled-components";
-import { bind } from "../api/api";
 import { OperationList } from "../models/OperationList";
+import { useRouter } from "next/router";
 
 import GlobalStyle from "../share/styles/global";
 import theme from "../share/styles/themes";
 
 const AppMQ: React.FC<AppProps> = ({ Component, pageProps }) => {
+  const router = useRouter();
   const startServer = async () => {
     try {
-      if (!localStorage.getItem("$$id")) {
-        const response = await bind(["AMBEV","AMBE2"]);
-        localStorage.setItem("$$id", response.toString());
-      }
       await OperationList.initialize(localStorage.getItem("$$id"));
     } catch (error) {}
   };

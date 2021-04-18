@@ -13,7 +13,7 @@ const List: React.FC = () => {
   useEffect(() => {
     setTimeout(() => {
       update();
-    }, 1000);
+    }, 2000);
   }, []);
 
   const update = () => {

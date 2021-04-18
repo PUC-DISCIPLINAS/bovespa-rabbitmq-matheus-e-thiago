@@ -28,13 +28,14 @@ export const sendOperation = async (
 ): Promise<Operation> => {
   try {
     const op: OperationInterface = {
-      broker: operation.getBroker(),
+      broker: operation.getBroker().substr(0,5),
       date: operation.getDate(),
       qnt: operation.getQnt(),
       type: operation.getType(),
       value: operation.getValue(),
       owner: operation.getOwner(),
     };
+    console.log(op.broker.substr(0,5));
     return await (await api.post("/send", op)).data;
   } catch (e) {
     console.error(e);

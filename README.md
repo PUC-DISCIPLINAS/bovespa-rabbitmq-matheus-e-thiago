@@ -11,18 +11,13 @@ _Instituto de Informática e Ciências Exatas – Pontifícia Universidade de Mi
 
 ---
 
-_**Resumo**. Escrever aqui o resumo. O resumo deve contextualizar rapidamente o trabalho, descrever seu objetivo e, ao final, 
-mostrar algum resultado relevante do trabalho (até 10 linhas)._
+_**Resumo**. Middlewares orientados a mensagens (MOM – Message Oriented Middlewares) são sistemas que permitem o envio de mensagens entre entidades de um sistema distribuído, esse trabalho utiliza dessa comunicação indireta por meio da tecnologia do RabbitMQ para desenvolver um sistema que simule uma bolsa de valores._
 
 ---
 
 **1. Projeto da Solução**
 
     1.1. Requisitos funcionais
-	
-Enumere os requisitos funcionais previstos para a sua aplicação. 
-Use a tabela abaixo para enumerá-lo.  Esses requisitos devem estar 
-de acordo com as definições do modelo de negócio.
 
 | No.           | Descrição                       | Prioridade |
 | ------------- |:-------------------------------:| ----------:|
@@ -32,11 +27,17 @@ de acordo com as definições do modelo de negócio.
 
     1.2. Tecnologias
 
-Descreva qual(is) tecnologias você vai usar para resolver o seu problema, ou seja implementar a sua solução. 
-Liste todas as tecnologias envolvidas, linguagens a serem utilizadas, serviços web, frameworks, bibliotecas, 
-IDEs de desenvolvimento, e ferramentas.  Apresente também uma figura explicando como as tecnologias estão 
-relacionadas ou como uma interação do usuário com o sistema vai ser conduzida, por onde ela passa até 
-retornar uma resposta ao usuário. 
+Esse projeto possui uma simples api que utiliza a linguagem typescript, realizando uma conexão com o sistema de fila de mensagem e a amarração ao _topic exchange_ que segue a seguinte lógica:
+
+![RabbitMQ Topic Exchange](img/RabbitMQ-Topics.png "RabbitMQ Topic Exchange")
+
+Esse é o exemplo oficial, retirado do [tutorial do RabbitMQ de _topic exchange_](https://www.rabbitmq.com/tutorials/tutorial-five-python.html), basicamente, utilizando esse modelo teremos um _topic exchange_ que realiza um roteamento de mensagens de acordo com seu tópico, por exemplo, na imagem acima, o cliente 1 (C1) conectado a fila 1 (Q1) irá receber todas mensagens com o tópico _orange_, já o cliente 2 (C2) conectado a fila 2 (Q2), tem interesse em ouvir mensagens sobre _rabbit_ e _lazy_.
+
+Isso permite a seleção de tópicos que o cliente deseja ouvir, fazendo com que sua conexão é configurada para receber apenas mensagens enviadas com esse tópico. A API é fornecida por meio do Express.js, um framework para o Node.js para a construção de aplicações web e  APIs.
+
+O serviço de RabbitMQ está hospedado no CloudAMPQ uma aplicação de RabbitMQ _as a service_, que permite a monitoração e configuração de componentes do RabbitMQ.
+
+A interface com o usuário utiliza das bibliotecas ReactJS e StyledComponents para a produção e estilização de componentes, juntamente com o framework NextJS para auxiliar no sistema de roteamento e o Axios, um cliente baseado em promessas HTTP para realizar a conexão com a REST API desenvolvida.
 
 **2. Execução**
 	

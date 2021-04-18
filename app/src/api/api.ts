@@ -6,9 +6,10 @@ export const api = axios.create({
   baseURL: "http://localhost:8002/",
 });
 
-export const bind = async (): Promise<number> => {
+export const bind = async (actives:string[]): Promise<number> => {
   try {
-    return await (await api.post("/bind")).data;
+    console.log(actives)
+    return await (await api.post("/bind" , actives )).data;
   } catch (e) {
     console.error(e);
   }

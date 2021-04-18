@@ -9,8 +9,8 @@ export class RabbitMQTopicServer {
         this.bindgs= []
     }
 
-    public async bindToQueue(active:string) {
-        this.bindgs = [...this.bindgs,active.toUpperCase()];      
+    public async bindToQueue(actives:string[]) {
+        this.bindgs = actives;      
     }
 
     public async start(channel:Channel): Promise<void> {

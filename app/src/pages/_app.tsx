@@ -10,7 +10,7 @@ const AppMQ: React.FC<AppProps> = ({ Component, pageProps }) => {
   const startServer = async () => {
     try {
       if (!localStorage.getItem("$$id")) {
-        const response = await bind();
+        const response = await bind(["AMBEV","AMBE2"]);
         localStorage.setItem("$$id", response.toString());
       }
       await OperationList.initialize(localStorage.getItem("$$id"));

@@ -57,7 +57,7 @@ app.post("/send", async (req: Request<Operation>, res: Response) => {
 });
 
 //initialize a connection
-app.post(`/bind`, async (req: Request, res: Response) => {
+app.post(`/bind`, async (req: Request<string[]>, res: Response) => {
   const connection = await connect(
     "amqps://pozawbsw:dEHTHRVWhV_JJ1_OoIH_7yqL7jQ_jDc0@jackal.rmq.cloudamqp.com/pozawbsw"
   );
@@ -68,9 +68,10 @@ app.post(`/bind`, async (req: Request, res: Response) => {
     topic: new RabbitMQTopicServer(),
     messages: [],
   };
-  topics[topicId].topic.start(channel);
-
-  topics[topicId].topic.bindToQueue("GALO");
+  const bindings : string[] = req.body;
+  topics[topicId].topic.start(channel); 
+  topics[topicId].topic.bindToQueue(bindings)
+  console.log(bindings)
   topics[topicId].topic.consume((message) => {
     const messageString = message.content.toString();
     topics[topicId].messages.push(messageString);

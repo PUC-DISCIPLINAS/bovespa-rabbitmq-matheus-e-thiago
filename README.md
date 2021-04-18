@@ -91,15 +91,17 @@ Caso retorne que a aplicação foi compilada com sucesso, ela será disponibiliz
 	
 **3. Modelagem de dados**
 
-Apresente o modelo de dados. Defina o dicionário de dados com os respectivos formatos e significados.
+    3.1. Diagrama de Componentes
 
-    3.1. Diagrama de Entidade-Relacionamento
+![Diagrama de componentes](img/ComponentDiagramBovespa.jpg "Diagrama de componentes")
 
-Apresente a estrutura das tabelas de banco de dados no modelo Diagrama de Entidade-Relacionamento.
+    3.2. Diagrama de Classes
+
+    
 
 **4. Sistema desenvolvido**
 
-Faça aqui uma breve descrição do software e coloque as principais telas com uma explicação de como usar cada uma.
+
 
 **5. Conclusão**
 

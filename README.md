@@ -101,7 +101,54 @@ Caso retorne que a aplicação foi compilada com sucesso, ela será disponibiliz
 
 **4. Sistema desenvolvido**
 
-Uma vez que o servidor e em seguida, a interface é inicializada e o usuário acessar o localhost:3000, a aplicação vai procurar no localStorage do usuário, se existe o item **id**, responsável por selecionar a conexão desse usuário, caso ela ainda não tenha sido estabelecida, o sistema redireciona o usuário para uma página de _bind_
+Uma vez que o servidor e em seguida, a interface é inicializada e o usuário acessar o localhost:3000, a aplicação vai procurar no localStorage do usuário, se existe o item **id**, responsável por selecionar a conexão desse usuário, caso ela ainda não tenha sido estabelecida, o sistema redireciona o usuário para uma página de _bind_.
 
-**5. Conclusão**
+![Página de bind](img/BindPage.png "Página de bind")
 
+Nessa página há algumas possibilidades de interesses pro usuário escolher, uma vez que ele selecione seus interesses e se inscreve neles, uma nova conexão será realizada pela API, a aplicação salvará o id para reconhecer esse usuário e ele só receberá novas operações que tenham como assunto os interesses que ele selecionou. Em seguida o sistema renderizará a home.
+
+![Página de bind selecionada](img/BindSelectedPage.png "Página de bind selecionada")
+
+Aqui foram selecionados os dois primeiros interesses.
+
+![Página de home](img/HomePage.png "Página de home")
+
+Essa é a página home, que apresenta as opções de cadastrar uma nova compra ou uma nova venda, também mostra a lista de operações dos tópicos selecionados, por enquanto está vazia, então ao clicar em comprar, abrirá um formulário para cadastrar uma operação de compra e ela será inserida também na lista da home.
+
+![Formulário de compra vazio](img/FormBuyPage.png "Formulário de compra vazio")
+
+![Formulário de compra](img/BuyPage.png "Formulário de compra")
+
+**Atenção:** a corretora a ser interesse de compra deve ser uma daquelas selecionadas na hora de escolher interesses para aparecer na home.
+
+![Página de home com a compra](img/HomeAfterBuyPage.png "Página de home com a compra")
+
+Agora, ao inserir uma nova operação de venda que atenda aos critérios da compra já cadastrada, será realizado um match e reconhecida uma transação.
+
+![Formulário de venda vazio](img/FormSellPage.png "Formulário de  vazio")
+
+![Formulário de venda](img/SellPage.png "Formulário de venda")
+
+Como serão inseridas 10 unidades, e o desejo de compra é de apenas 5, sobrarão 5 delas e será realizada uma transferência das outras 5.
+
+![Página de home com a transferência](img/HomeAfterTransferPage.png "Página de home com a transferência")
+
+Repare que a página foi atualizada com os novos dados, e a quantidade das operações de compra e venda foram alteradas. Caso outro usuário cadastre uma nova operação com o mesmo tópico, o botão de atualizar da home poderá ser utilizado para recolher essa inserção.
+
+Caso uma nova operação com um interesse fora dos selecionados no início seja escolhida, ela não será inserida na lista.
+
+![Formulário de venda sem interesse](img/SellPageNoSelected.png "Formulário de venda sem interesse")
+
+Agora, ao inserir essa venda relacionada ao VALE5, ela não aparece na página inicial.
+
+![Formulário de venda com interesse](img/SellPageSelected.png "Formulário de venda com interesse")
+
+Porém, essa operação de venda relacionada a PETR4 pertence aos interesses, logo, ela será inserida na página inicial.
+
+![Tela final de home](img/LastHomePage.png "Tela final de home")
+
+Como esperado, apenas aquela que corresponde ao interesse foi inserida na lista, caso outro usuário tivesse a VALE5 entre os interesses, sua conexão iria ouvir aquela inserção e colocá-lo na lista.
+
+![Terminal do servidor](img/Terminal.png "Terminal do servidor")
+
+Por fim, o terminal do servidor também registra todas as operações que foram consumidas e qual o id da conexão que a consumiu.

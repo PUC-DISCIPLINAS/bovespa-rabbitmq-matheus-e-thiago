@@ -21,9 +21,12 @@ _**Resumo**. Middlewares orientados a mensagens (MOM – Message Oriented Middle
 
 | No.           | Descrição                       | Prioridade |
 | ------------- |:-------------------------------:| ----------:|
-| {número       | Descrição resumida do requisito | {Alta      |
-| sequencial    |                                 |  média     |
-| identificador |                                 |  ou baixa  | 
+| RF1       | O usuário poderá escolher os tópicos de interesse para ouvir | Alta      |
+| RF2    |   O usuário poderá cadastrar ações de compra                              |  Alta     |
+| RF3 |     O usuário poderá cadastrar ações de venda                            |  Alta  | 
+| RF4 |     O usuário deverá receber as mensagens de transição realizadas                           |  Alta  | 
+| RF5 |     O usuário deverá receber as compras e vendas cadastradas                           |  Média  | 
+| RF6 |     O sistema deve atualizar uma compra ou venda caso ocorra uma transição                           |  Média  | 
 
     1.2. Tecnologias
 

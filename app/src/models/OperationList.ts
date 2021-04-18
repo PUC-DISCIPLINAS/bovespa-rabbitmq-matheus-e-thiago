@@ -6,6 +6,7 @@ export class OperationList {
   private static _operations: Operation[] = [];
   private static _init = 0;
 
+  //adiciona uma nova lista
   static async add(op: Operation) {
     switch (op.getType()) {
       case Types.sell:
@@ -15,9 +16,6 @@ export class OperationList {
         await this.confirmIfBuy(op);
         break;
     }
-    this._operations.push(op);
-    this.sort();
-    this._init++;
   }
 
   private static sort(): void {
@@ -105,6 +103,7 @@ export class OperationList {
     return false;
   }
 
+  //get data from backend
   public static async initialize(id: string) {
     const messages = await getMessages(id);
     const initializeAt = this._init;
@@ -142,5 +141,6 @@ export class OperationList {
         this._operations.push(operation);
       } catch (error) {}
     }
+    this.sort();
   }
 }

@@ -98,9 +98,10 @@ app.post(`/bind`, async (req: Request, res: Response) => {
 
 //recover connection messages
 app.get("/messages/:id", (req: Request, res: Response) => {
-  if (topics[1]) {
+  const index = (req.params.id as unknown) as number;
+  if (topics[index]) {
     setTimeout(() => {
-      return res.json(topics[1].messages);
+      return res.json(topics[index].messages);
     }, 500);
   } else return res.status(404);
 });

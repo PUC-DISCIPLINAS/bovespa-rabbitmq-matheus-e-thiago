@@ -10,6 +10,12 @@ const List: React.FC = () => {
   let opData: Operation[] = controller.get();
   const [data, setData] = useState(opData);
 
+  useEffect(() => {
+    setTimeout(() => {
+      update();
+    }, 1000);
+  }, []);
+
   const update = () => {
     try {
       const localStorageValue = localStorage.getItem("$$id");

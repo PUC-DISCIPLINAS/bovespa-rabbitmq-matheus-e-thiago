@@ -12,11 +12,6 @@ interface Operation {
   value: number;
   owner: string;
 }
-
-interface Id {
-  id: number;
-}
-
 interface Connections {
   topic: RabbitMQTopicServer;
   messages: string[];
@@ -71,8 +66,29 @@ app.post(`/bind`, async (req: Request, res: Response) => {
   topics[topicId].topic.start(channel);
 
   topics[topicId].topic.bindToQueue("GALO");
+
+  //thread that will listen to updates
   topics[topicId].topic.consume((message) => {
     const messageString = message.content.toString();
+    const newOperation: Operation = JSON.parse(message.content.toString());
+    const toRemove: string[] = [];
+
+    for (let msg of topics[topicId].messages) {
+      const oldOperation: Operation = JSON.parse(msg);
+      if (
+        oldOperation.broker === newOperation.broker &&
+        oldOperation.value === newOperation.value &&
+        oldOperation.type === newOperation.type
+      ) {
+        toRemove.push(msg);
+      }
+    }
+    for (let msg of toRemove) {
+      topics[topicId].messages = topics[topicId].messages.filter(
+        (m) => msg !== m
+      );
+    }
+
     topics[topicId].messages.push(messageString);
     console.log("Broker " + topicId + " received " + messageString);
   }, channel);
@@ -91,17 +107,4 @@ app.get("/messages/:id", (req: Request, res: Response) => {
 
 app.listen(PORT, async () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
-  // const connection = await connect(
-  //   "amqps://pozawbsw:dEHTHRVWhV_JJ1_OoIH_7yqL7jQ_jDc0@jackal.rmq.cloudamqp.com/pozawbsw"
-  // );
-  // const channel = await connection.createChannel();
-  // const topicServer = new RabbitMQTopicServer();
-
-  // await topicServer.start(channel);
-  // await topicServer.bindToQueue("GALO");
-  // await topicServer.consume((message) => {
-  //   console.log(`recebi: ${message.content.toString()}`);
-  // }, channel);
-
-  // await topicServer.publishExchange("hello world", "compra.GALO", channel);
 });

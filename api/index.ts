@@ -12,11 +12,6 @@ interface Operation {
   value: number;
   owner: string;
 }
-
-interface Id {
-  id: number;
-}
-
 interface Connections {
   topic: RabbitMQTopicServer;
   messages: string[];
@@ -71,9 +66,28 @@ app.post(`/bind`, async (req: Request<string[]>, res: Response) => {
   const bindings : string[] = req.body;
   topics[topicId].topic.start(channel); 
   topics[topicId].topic.bindToQueue(bindings)
-  console.log(bindings)
+
   topics[topicId].topic.consume((message) => {
     const messageString = message.content.toString();
+    const newOperation: Operation = JSON.parse(message.content.toString());
+    const toRemove: string[] = [];
+
+    for (let msg of topics[topicId].messages) {
+      const oldOperation: Operation = JSON.parse(msg);
+      if (
+        oldOperation.broker === newOperation.broker &&
+        oldOperation.value === newOperation.value &&
+        oldOperation.type === newOperation.type
+      ) {
+        toRemove.push(msg);
+      }
+    }
+    for (let msg of toRemove) {
+      topics[topicId].messages = topics[topicId].messages.filter(
+        (m) => msg !== m
+      );
+    }
+
     topics[topicId].messages.push(messageString);
     console.log("Broker " + topicId + " received " + messageString);
   }, channel);
@@ -83,26 +97,14 @@ app.post(`/bind`, async (req: Request<string[]>, res: Response) => {
 
 //recover connection messages
 app.get("/messages/:id", (req: Request, res: Response) => {
-  if (topics[1]) {
+  const index = (req.params.id as unknown) as number;
+  if (topics[index]) {
     setTimeout(() => {
-      return res.json(topics[1].messages);
+      return res.json(topics[index].messages);
     }, 500);
   } else return res.status(404);
 });
 
 app.listen(PORT, async () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
-  // const connection = await connect(
-  //   "amqps://pozawbsw:dEHTHRVWhV_JJ1_OoIH_7yqL7jQ_jDc0@jackal.rmq.cloudamqp.com/pozawbsw"
-  // );
-  // const channel = await connection.createChannel();
-  // const topicServer = new RabbitMQTopicServer();
-
-  // await topicServer.start(channel);
-  // await topicServer.bindToQueue("GALO");
-  // await topicServer.consume((message) => {
-  //   console.log(`recebi: ${message.content.toString()}`);
-  // }, channel);
-
-  // await topicServer.publishExchange("hello world", "compra.GALO", channel);
 });

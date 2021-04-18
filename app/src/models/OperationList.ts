@@ -6,19 +6,16 @@ export class OperationList {
   private static _operations: Operation[] = [];
   private static _init = 0;
 
+  //adiciona uma nova lista
   static async add(op: Operation) {
-    //this._rabbitmqServer.start()
-    this._operations.push(op);
-    this.sort();
     switch (op.getType()) {
       case Types.sell:
-        await this.confirmIfSell(op);
+        if (!(await this.confirmIfSell(op))) await this.confirmIfExist(op);
         break;
       case Types.buy:
         await this.confirmIfBuy(op);
         break;
     }
-    await sendOperation(op);
   }
 
   private static sort(): void {
@@ -56,6 +53,7 @@ export class OperationList {
         return true;
       }
     }
+    await sendOperation(op);
     return false;
   }
 
@@ -87,6 +85,25 @@ export class OperationList {
     return false;
   }
 
+  //Quando insere uma operação de venda, ele pecorre todas e vê se já existia essa operação
+  //para aumentar a quantidade
+  static async confirmIfExist(op: Operation): Promise<boolean> {
+    const list: Operation[] = this._operations.filter(
+      (o) => o.getType() === Types.sell
+    );
+    for (let o of list) {
+      if (o.getBroker() === op.getBroker() && o.getValue() === op.getValue()) {
+        op.addMore(o.getQnt());
+        await sendOperation(op);
+        this._operations = this._operations.filter((oLambda) => oLambda !== o);
+        return true;
+      }
+    }
+    await sendOperation(op);
+    return false;
+  }
+
+  //get data from backend
   public static async initialize(id: string) {
     const messages = await getMessages(id);
     const initializeAt = this._init;
@@ -124,5 +141,6 @@ export class OperationList {
         this._operations.push(operation);
       } catch (error) {}
     }
+    this.sort();
   }
 }

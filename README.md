@@ -30,7 +30,7 @@ _**Resumo**. Middlewares orientados a mensagens (MOM – Message Oriented Middle
 
     1.2. Tecnologias
 
-Esse projeto possui uma simples api que utiliza a linguagem typescript, realizando uma conexão com o sistema de fila de mensagem e a amarração ao _topic exchange_ que segue a seguinte lógica:
+Esse projeto possui uma API que utiliza a linguagem typescript, realizando uma conexão com o sistema de fila de mensagem e a amarração ao _topic exchange_ que segue a seguinte lógica:
 
 ![RabbitMQ Topic Exchange](img/RabbitMQ-Topics.png "RabbitMQ Topic Exchange")
 
@@ -40,9 +40,54 @@ Isso permite a seleção de tópicos que o cliente deseja ouvir, fazendo com que
 
 O serviço de RabbitMQ está hospedado no CloudAMPQ uma aplicação de RabbitMQ _as a service_, que permite a monitoração e configuração de componentes do RabbitMQ.
 
-A interface com o usuário utiliza das bibliotecas ReactJS e StyledComponents para a produção e estilização de componentes, juntamente com o framework NextJS para auxiliar no sistema de roteamento e o Axios, um cliente baseado em promessas HTTP para realizar a conexão com a REST API desenvolvida.
+A interface com o usuário utiliza da linguagem typescript e das bibliotecas ReactJS e StyledComponents para a produção e estilização de componentes, juntamente com o framework NextJS para auxiliar no sistema de roteamento e o Axios, um cliente baseado em promessas HTTP para realizar a conexão com a REST API desenvolvida.
 
 **2. Execução**
+
+### Inicialização
+
+```bash
+# Clonar o repositório
+$ git clone https://github.com/PUC-DISCIPLINAS/bovespa-rabbitmq-matheus-e-thiago.git
+
+# Entrar na pasta do projeto clonado
+$ cd bovespa-rabbitmq-matheus-e-thiago
+```
+
+### Execução - API
+
+```bash
+# Entrar na pasta do projeto da API
+$ cd api
+
+# Instalar dependências
+$ yarn
+
+# Inicializar o servidor
+$ yarn start
+```
+
+Retorna que o servidor está pronto e aberto na porta 8002.
+
+### Execução - Interface
+
+É necessário que o servidor esteja em execução para o cliente funcionar corretamente.
+
+```bash
+# Entrar na pasta do projeto com a interface
+$ cd app
+
+# Instalar dependências
+$ npm install
+
+# Inicializar o servidor
+$ npm run dev
+```
+
+Caso retorne que a aplicação foi compilada com sucesso, ela será disponibilizada na porta 3000. Entre no navegador e digite localhost:3000 para ver a aplicação.
+
+**Observação:** O sistema não possui banco de dados, logo a persistência é realizada em memória, casa o servidor seja reiniciado os dados serão perdidos, logo, recomenda-se também a deletar o conteúdo do localstorage da porta 3000.
+
 	
 **3. Modelagem de dados**
 

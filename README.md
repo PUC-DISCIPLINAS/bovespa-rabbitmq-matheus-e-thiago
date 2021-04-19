@@ -99,7 +99,7 @@ Caso retorne que a aplicação foi compilada com sucesso, ela será disponibiliz
 
     3.2. Diagrama de Classes
 
-![Diagrama de classes](ClassDiagramBolsa.png "Diagrama de classes")  
+![Diagrama de classes](img/ClassDiagramBolsa.png "Diagrama de classes")  
 
 **5. Sistema desenvolvido**
 

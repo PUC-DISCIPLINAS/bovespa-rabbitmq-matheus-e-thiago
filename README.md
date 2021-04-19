@@ -15,6 +15,7 @@ _**Resumo**. Middlewares orientados a mensagens (MOM – Message Oriented Middle
 
 ---
 **1. Introdução**
+
 O codigo em questão se trata de uma aplicação que foi desenvolvida para simular um sistema de bolsa de valores. Onde Clientes possam anunciar compras e vendas de ações e distribuir assim essas operações para os clientes interessados exibindo também caso alguma transição aconteça. Essa dispersão de operações entre os clientes foi feita utilizando o sistema de topics publish-subscribe do middleware RabbitMQ.
 
 **2. Projeto da Solução**
@@ -156,4 +157,5 @@ Como esperado, apenas aquela que corresponde ao interesse foi inserida na lista,
 Por fim, o terminal do servidor também registra todas as operações que foram consumidas e qual o id da conexão que a consumiu.
 
 **6 Conclusão**
+
 Com a conclusão deste projeto foi possível aprender melhor o funcionamento do middleware de mensageria RabbitMQ e notar sua praticidade. Foi possível explorarar o funcionamento da tecnologia e notou-se que ela é uma solução muito eficiente quando se necessita de um sistema de mensageria com comunicação indireta. Além disso foi possível também incrementar conhecimentos a respeito de outras tecnologias que foram utilizadas no trabalho como o express.js e axios. 

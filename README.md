@@ -14,8 +14,10 @@ _Instituto de Informática e Ciências Exatas – Pontifícia Universidade de Mi
 _**Resumo**. Middlewares orientados a mensagens (MOM – Message Oriented Middlewares) são sistemas que permitem o envio de mensagens entre entidades de um sistema distribuído, esse trabalho utiliza dessa comunicação indireta por meio da tecnologia do RabbitMQ para desenvolver um sistema que simule uma bolsa de valores._
 
 ---
+**1. Introdução**
+O codigo em questão se trata de uma aplicação que foi desenvolvida para simular um sistema de bolsa de valores. Onde Clientes possam anunciar compras e vendas de ações e distribuir assim essas operações para os clientes interessados exibindo também caso alguma transição aconteça. Essa dispersão de operações entre os clientes foi feita utilizando o sistema de topics publish-subscribe do middleware RabbitMQ.
 
-**1. Projeto da Solução**
+**2. Projeto da Solução**
 
     1.1. Requisitos funcionais
 
@@ -42,7 +44,7 @@ O serviço de RabbitMQ está hospedado no CloudAMPQ uma aplicação de RabbitMQ 
 
 A interface com o usuário utiliza da linguagem typescript e das bibliotecas ReactJS e StyledComponents para a produção e estilização de componentes, juntamente com o framework NextJS para auxiliar no sistema de roteamento e o Axios, um cliente baseado em promessas HTTP para realizar a conexão com a REST API desenvolvida.
 
-**2. Execução**
+**3. Execução**
 
 ### Inicialização
 
@@ -89,7 +91,7 @@ Caso retorne que a aplicação foi compilada com sucesso, ela será disponibiliz
 **Observação:** O sistema não possui banco de dados, logo a persistência é realizada em memória, casa o servidor seja reiniciado os dados serão perdidos, logo, recomenda-se também a deletar o conteúdo do localstorage da porta 3000.
 
 	
-**3. Modelagem de dados**
+**4. Modelagem de dados**
 
     3.1. Diagrama de Componentes
 
@@ -97,9 +99,9 @@ Caso retorne que a aplicação foi compilada com sucesso, ela será disponibiliz
 
     3.2. Diagrama de Classes
 
-    
+![Diagrama de classes](ClassDiagramBolsa.png "Diagrama de classes")  
 
-**4. Sistema desenvolvido**
+**5. Sistema desenvolvido**
 
 Uma vez que o servidor e em seguida, a interface é inicializada e o usuário acessar o localhost:3000, a aplicação vai procurar no localStorage do usuário, se existe o item **id**, responsável por selecionar a conexão desse usuário, caso ela ainda não tenha sido estabelecida, o sistema redireciona o usuário para uma página de _bind_.
 
@@ -152,3 +154,6 @@ Como esperado, apenas aquela que corresponde ao interesse foi inserida na lista,
 ![Terminal do servidor](img/Terminal.png "Terminal do servidor")
 
 Por fim, o terminal do servidor também registra todas as operações que foram consumidas e qual o id da conexão que a consumiu.
+
+**6 Conclusão**
+Com a conclusão deste projeto foi possível aprender melhor o funcionamento do middleware de mensageria RabbitMQ e notar sua praticidade. Foi possível explorarar o funcionamento da tecnologia e notou-se que ela é uma solução muito eficiente quando se necessita de um sistema de mensageria com comunicação indireta. Além disso foi possível também incrementar conhecimentos a respeito de outras tecnologias que foram utilizadas no trabalho como o express.js e axios. 

@@ -4,6 +4,10 @@ import { RabbitMQTopicServer } from "./src/RabbitMQTopicServer";
 import { Channel, Connection, connect } from "amqplib";
 import { Request, Response } from "express";
 import cors from "cors";
+
+/**
+ * inteface que será utilizada para fazer a transição de operações entre back e front
+ */
 interface Operation {
   broker: string;
   date: Date;
@@ -12,6 +16,10 @@ interface Operation {
   value: number;
   owner: string;
 }
+
+/**
+ * interface que será utilizada pela const topics para armazenar as mensagens(operações) de um cliente e instancia da RabbitMQServer
+ */
 interface Connections {
   topic: RabbitMQTopicServer;
   messages: string[];
@@ -21,6 +29,9 @@ const topics: Connections[] = [];
 let id: number = 1;
 const app = express();
 const PORT = 8002;
+const brokerServer = new RabbitMQBroker();
+const cloudAMQPURI = "amqps://pozawbsw:dEHTHRVWhV_JJ1_OoIH_7yqL7jQ_jDc0@jackal.rmq.cloudamqp.com/pozawbsw"
+
 app.use(cors());
 // middleware
 app.use(express.json());
@@ -31,14 +42,13 @@ app.get("/ping", function (req, res) {
   res.json({ msg: "GOT IT!" });
 });
 
-//send operation to broker server
+/**
+ * Envia uma operação para a fila broker e publica na exchange para os clientes receberem a operação
+ */
 app.post("/send", async (req: Request<Operation>, res: Response) => {
-  const connection = await connect(
-    "amqps://pozawbsw:dEHTHRVWhV_JJ1_OoIH_7yqL7jQ_jDc0@jackal.rmq.cloudamqp.com/pozawbsw"
-  );
+  const connection = await connect(cloudAMQPURI);
   const channel = await connection.createChannel();
   const op: Operation = req.body;
-  const brokerServer = new RabbitMQBroker();
   await brokerServer.start(channel);
   await brokerServer.publishInQueue(JSON.stringify(op), channel);
   const topicServer = new RabbitMQTopicServer();
@@ -51,11 +61,11 @@ app.post("/send", async (req: Request<Operation>, res: Response) => {
   res.json(op);
 });
 
-//initialize a connection
+/**
+ * Cria uma fila para um cliente de acordo com os bindings desejados e consome mensagens daquela fila
+ */
 app.post(`/bind`, async (req: Request<string[]>, res: Response) => {
-  const connection = await connect(
-    "amqps://pozawbsw:dEHTHRVWhV_JJ1_OoIH_7yqL7jQ_jDc0@jackal.rmq.cloudamqp.com/pozawbsw"
-  );
+  const connection = await connect(cloudAMQPURI);
   const channel = await connection.createChannel();
   const topicId = id;
   id++;
@@ -81,12 +91,9 @@ app.post(`/bind`, async (req: Request<string[]>, res: Response) => {
         oldOperation.value === newOperation.value &&
         oldOperation.type === newOperation.type 
       ) {
-        console.log(oldOperation);
-        console.log(newOperation);
         toRemove.push(msg);
       }
     }
-    console.log(toRemove)
     for (let msg of toRemove) {
       topics[topicId].messages = topics[topicId].messages.filter(
         (m) => msg !== m
@@ -100,7 +107,9 @@ app.post(`/bind`, async (req: Request<string[]>, res: Response) => {
   return res.json(topicId);
 });
 
-//recover connection messages
+/**
+ * Recupera as mensagens de um cliente a partir de seu id armazenado em localstorage
+ */
 app.get("/messages/:id", (req: Request, res: Response) => {
   const index = (req.params.id as unknown) as number;
   if (topics[index]) {

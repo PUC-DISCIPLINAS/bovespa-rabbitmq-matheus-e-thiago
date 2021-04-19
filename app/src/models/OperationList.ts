@@ -2,10 +2,18 @@ import { Buy, Sell, Operation, Transfer } from "./Operation";
 import { Types } from "./Types";
 import { sendOperation, getMessages } from "../api/api";
 import { OperationInterface } from "./OperationInterface";
+
+/**
+ * @class repsonsável por armazenar um array de operações e realizar transições entre elas
+ */
 export class OperationList {
   private static _operations: Operation[] = [];
   private static _init = 0;
 
+  /**
+   * Recebe uma operação e adiciona na lista de operações
+   * @param op {Operation}
+   */
   //adiciona uma nova lista
   static async add(op: Operation) {
     switch (op.getType()) {
@@ -18,6 +26,9 @@ export class OperationList {
     }
   }
 
+  /**
+   * Ordena a lista de operações de acordo com a ultima data de atualização
+   */
   private static sort(): void {
     this._operations.sort((a, b) => (a.getDate() > b.getDate() ? -1 : 1));
   }
@@ -26,7 +37,11 @@ export class OperationList {
     return ([] as Operation[]).concat(this._operations);
   }
 
-  //Quando insere uma operação de compra, ele pecorre todos e ve se alguem queria vender
+  /**
+   * Quando insere uma operação de compra, ele pecorre todos e ve se alguem queria vender
+   * @param op {Operation}
+   * @returns retorna um boolean: true acaso seja criada uma transferencia e false caso não
+   */
   static async confirmIfBuy(op: Operation): Promise<boolean> {
     const list: Operation[] = this._operations.filter(
       (o) => o.getType() === Types.sell
@@ -57,7 +72,11 @@ export class OperationList {
     return false;
   }
 
-  //Quando insere uma operação de venda, ele pecorre todas e vê se tinha alguém querendo comprar
+  /**
+   * Quando insere uma operação de venda, ele pecorre todas e vê se tinha alguém querendo comprar
+   * @param op {Operation}
+   * @returns retorna um boolean: true acaso seja criada uma transferencia e false caso não
+   */
   static async confirmIfSell(op: Operation): Promise<boolean> {
     const list: Operation[] = this._operations.filter(
       (o) => o.getType() === Types.buy
@@ -65,9 +84,7 @@ export class OperationList {
     for (let o of list) {
       if (
         o.getBroker() === op.getBroker() &&
-        o.getValue() === op.getValue() &&
-        +o.getQnt() <= +op.getQnt()
-      ) {
+        o.getValue() === op.getValue()) {
         const qnt = o.getQnt();
         //cria a transação
         op.sell(o);
@@ -88,8 +105,11 @@ export class OperationList {
     return false;
   }
 
-  //Quando insere uma operação de venda, ele pecorre todas e vê se já existia essa operação
-  //para aumentar a quantidade
+  /**
+   * Quando insere uma operação de venda, ele pecorre todas e vê se já existia essa operação para aumentar a quantidade
+   * @param op {Operation}
+   * @returns retorna true caso seja incrementado em alguma operação e false caso não
+   */
   static async confirmIfExist(op: Operation): Promise<boolean> {
     const list: Operation[] = this._operations.filter(
       (o) => o.getType() === Types.sell
@@ -106,7 +126,10 @@ export class OperationList {
     return false;
   }
 
-  //get data from backend
+  /**
+   * Pega as operações do back-end que estão armazenadas para aquele usuário no backend a partir de um id no localstorage
+   * @param id {string}
+   */
   public static async initialize(id: string) {
     const messages = await getMessages(id);
     const initializeAt = this._init;
